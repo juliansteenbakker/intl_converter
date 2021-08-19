@@ -7,7 +7,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Locale defLocale = Locale('en','');
+    Locale defLocale = Locale('en', '');
     return MaterialApp(
       localizationsDelegates: [
         const AppStringsDelegate(),
@@ -15,8 +15,9 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate
       ],
       locale: defLocale,
-      supportedLocales:  AppStrings.createSupportedLocale(false),
-      onGenerateTitle: (BuildContext context) => AppStrings.of(context).appTitle,
+      supportedLocales: AppStrings.createSupportedLocale(false),
+      onGenerateTitle: (BuildContext context) =>
+          AppStrings.of(context).appTitle,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  Locale locale;
-  MyHomePage(this.locale,{Key key}) : super(key: key);
+  final Locale locale;
+  MyHomePage(this.locale, {Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState(locale);
@@ -47,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var scaffold =  Scaffold(
+    var scaffold = Scaffold(
       appBar: AppBar(
         title: Text(AppStrings.of(context).appTitle),
       ),
@@ -60,18 +61,18 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.display1,
+              style: Theme.of(context).textTheme.headline3,
             ),
             ElevatedButton(
-              onPressed: (){
+              onPressed: () {
                 //change locale
                 Locale nextLocale;
-                if(_locale.languageCode=='en'){
+                if (_locale.languageCode == 'en') {
                   nextLocale = Locale('zh', '');
-                }else{
+                } else {
                   nextLocale = Locale('en', '');
                 }
-                AppStrings.load(nextLocale).then((_){
+                AppStrings.load(nextLocale).then((_) {
                   setState(() {
                     _locale = nextLocale;
                   });
@@ -88,7 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-    return Localizations.override(context: context, child: scaffold,
+    return Localizations.override(
+      context: context,
+      child: scaffold,
       locale: _locale,
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:xml/xml.dart' as xml;
-import 'package:string_unescape/string_unescape.dart';
+
+import '../string_unescape.dart';
 
 class Xml2Arb {
   static Map<String, dynamic> convertFromFile(String filePath, String locale) {
