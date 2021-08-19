@@ -1,3 +1,14 @@
+## 1.0.0
+Initial fork from intl_manager.
+The fork wasn't working anymore because of dependencies that weren't compatible
+with null-safety. After some changes i got this package working again.
+
+Features:
+* null-safety
+* Add json formatting to ARB
+* Updated all dependencies
+
+Changelog from intl_manager:
 ## [0.0.1]
 
 * Add android's Strings-xx.xml convert to flutter style
