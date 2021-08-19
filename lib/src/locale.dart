@@ -1,6 +1,6 @@
 class Locale {
   String languageCode;
-  String countryCode;
+  String? countryCode;
 
   Locale(this.languageCode, [this.countryCode]);
 
@@ -43,6 +43,6 @@ class Locale {
   }
 
   bool isEmpty() {
-    return languageCode == null || languageCode.length < 1;
+    return languageCode.length < 1;
   }
 }

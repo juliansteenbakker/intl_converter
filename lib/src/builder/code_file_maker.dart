@@ -1,6 +1,6 @@
 part of './builder.dart';
 
-String _makeClassCodeString(String className,String supportedLocaleCode, String getterCode) {
+String _makeClassCodeString(String? className,String supportedLocaleCode, String getterCode) {
   return '''
 // DO NOT EDIT. This is code generated via package:intl_converter
 
@@ -40,8 +40,8 @@ String _makeSupportedLocaleCode(List<I18nEntity> supportedLocale) {
     _supportedLocaleMap=_supportedLocaleMap.substring(0,_supportedLocaleMap.length-1);
   }
   return '''
-  static const List<String> _supportedLanguageCode = [${_supportedLanguageCode??''}];
-  static const List<List<String>> _supportedLocaleMap = [${_supportedLocaleMap??''}];
+  static const List<String> _supportedLanguageCode = [$_supportedLanguageCode];
+  static const List<List<String>> _supportedLocaleMap = [$_supportedLocaleMap];
 
   static List<String> getSupportedLanguageCodes(){
     return _supportedLanguageCode;
@@ -64,7 +64,7 @@ String _filterMessage(String msg){
   return msg;
 }
 
-String _filterKey(String key){
+String _filterKey(String? key){
   if(key==null){
     return '';
   }
@@ -72,8 +72,8 @@ String _filterKey(String key){
 }
 
 bool makeDefinesDartCodeFile(
-    File outFile, String className, Map<String, dynamic> arbJson,List<I18nEntity> supportedLocale) {
-  List<String> getters = new List();
+    File outFile, String? className, Map<String, dynamic> arbJson,List<I18nEntity> supportedLocale) {
+  List<String> getters = [];
   arbJson.forEach((key, value) {
     if (key.startsWith('@')) {
       return;

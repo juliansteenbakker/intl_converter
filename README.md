@@ -1,10 +1,10 @@
 ## intl_converter
 A library tool that help you manager i18n strings in flutter,include convert from android "strings-xx.xml".
-Before to use,you need to kown what is LocalizationsDelegate and what is intl_translation.
+Before to use,you need to know what is LocalizationsDelegate and what is intl_translation.
 
 Flutter use arb file to manager i18n strings. some times you need to refactor an old android project use flutter.
 
-intl_converter can help you converte android strings-xx.xml to flutter's arb file,and auto generate Dart class
+intl_converter can help you convert android strings-xx.xml to flutter's arb file,and auto generate Dart class
 include all the strings define.You just need to extend the Dart class and registe with LocalizationsDelegate.
 
 Flutter's internationalization reference:

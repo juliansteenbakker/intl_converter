@@ -5,24 +5,25 @@ import 'package:string_unescape/string_unescape.dart';
 class Xml2Arb {
   static Map<String, dynamic> convertFromFile(String filePath, String locale) {
     File file = File(filePath);
-    String content;
+    String? content;
     try {
       content = file.readAsStringSync();
     } catch (e) {
       print(e);
     }
-    return convert(content, locale);
+    return convert(content!, locale);
   }
 
   static Map<String, dynamic> convert(String stringsXml, String locale) {
-    xml.XmlDocument result = xml.parse(stringsXml);
+    xml.XmlDocument result = xml.XmlDocument.parse(stringsXml);
     var stringsList = result.rootElement.children;
     Map<String, dynamic> arbJson = {};
     arbJson['@@locale'] = locale;
     for (var se in stringsList) {
-      String key = getNodeStringKey(se);
-      String arbKey = normalizeKeyName(key);
+      String? key = getNodeStringKey(se);
+      String? arbKey = normalizeKeyName(key);
       if (arbKey != null && arbKey.isNotEmpty) {
+        arbKey = '${arbKey[0].toLowerCase()}${arbKey.substring(1)}';
         arbJson[arbKey] = unescape(se.text);
         arbJson['@$arbKey'] = {'type': 'text'};
       }
@@ -30,7 +31,7 @@ class Xml2Arb {
     return arbJson;
   }
 
-  static String getNodeStringKey(xml.XmlNode node) {
+  static String? getNodeStringKey(xml.XmlNode node) {
     if (node.attributes.isNotEmpty) {
       for (xml.XmlAttribute attr in node.attributes) {
         if (attr.name.qualified == "name") {
@@ -41,7 +42,7 @@ class Xml2Arb {
     return null;
   }
 
-  static String normalizeKeyName(String key) {
+  static String? normalizeKeyName(String? key) {
     if (key == null || key.length == 0) {
       return key;
     }

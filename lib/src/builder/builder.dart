@@ -17,27 +17,27 @@ class BuildResult {
 class IntlBuilder {
   final RegExp stringsXmlNameReg =
   RegExp('^strings(-[a-zA-Z]{1,10})(-[a-zA-Z]{1,10})?.xml\$');
-  Directory scanDir;
-  Directory outDir;
-  File outDefineDartFile;
-  String genClass;
-  File genClassFile;
-  Locale devLocale;
-  final List<I18nEntity> i18nEnttitys = List();
+  Directory? scanDir;
+  Directory? outDir;
+  File? outDefineDartFile;
+  String? genClass;
+  File? genClassFile;
+  Locale? devLocale;
+  final List<I18nEntity> i18nEnttitys = [];
 
-  IntlBuilder({String scanDir,
-    String outDir,
-    String genClass,
-    File genClassFile,
-    Locale devLocale}) {
+  IntlBuilder({required String scanDir,
+    required String outDir,
+    String? genClass,
+    File? genClassFile,
+    Locale? devLocale}) {
     //
     this.scanDir = Directory(scanDir);
     this.outDir = Directory(outDir);
     this.genClass = genClass;
     this.outDefineDartFile = genClassFile;
     this.devLocale = devLocale;
-    if (!this.outDir.existsSync()) {
-      this.outDir.createSync();
+    if (!this.outDir!.existsSync()) {
+      this.outDir!.createSync(recursive: true);
     }
     print(this.scanDir);
     print(this.outDir);
@@ -46,14 +46,14 @@ class IntlBuilder {
   }
 
   BuildResult build() {
-    List<FileSystemEntity> fseList = scanDir.listSync();
+    List<FileSystemEntity> fseList = scanDir!.listSync();
     bool foundDevLang = false;
     for (FileSystemEntity fe in fseList) {
       if (fe is File) {
         String fileName = path.basename(fe.path);
-        Match matched = stringsXmlNameReg.firstMatch(fileName);
-        String languageCode;
-        String countryCode;
+        Match? matched = stringsXmlNameReg.firstMatch(fileName);
+        String? languageCode;
+        String? countryCode;
         if (matched != null && matched.groupCount > 0) {
           languageCode = matched.group(1);
           languageCode = languageCode?.replaceAll('-', '');
@@ -64,7 +64,7 @@ class IntlBuilder {
         }
         if (languageCode != null) {
           Locale locale = Locale(languageCode, countryCode);
-          bool isDevLang = locale.isSameLocale(devLocale);
+          bool isDevLang = locale.isSameLocale(devLocale!);
           if (!foundDevLang) {
             foundDevLang = isDevLang;
           }
@@ -79,9 +79,7 @@ class IntlBuilder {
     List<String> arbFileNames = [];
     for (I18nEntity en in i18nEnttitys) {
       String fileName = en.makeArbFileName('intl');
-      if (arbFileNames != null) {
-        arbFileNames.add(fileName);
-      }
+      arbFileNames.add(fileName);
       _buildI18Entity(en, fileName);
     }
     return BuildResult(arbFileNames, true);
@@ -90,15 +88,18 @@ class IntlBuilder {
   _buildI18Entity(I18nEntity entity, String fileName) {
     var jsonObj = Xml2Arb.convertFromFile(
         entity.xmlFilePath, entity.locale.toLocaleString('_'));
-    String jsonStr = jsonEncode(jsonObj);
-    File outFile = File(path.absolute(outDir.path, fileName));
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    String jsonStr = encoder.convert(jsonObj);
+    // String jsonStr = jsonEncode(jsonObj);
+    File outFile = File(path.absolute(outDir!.path, fileName));
     if (!outFile.existsSync()) {
       outFile.createSync();
     }
+
     outFile.writeAsStringSync(jsonStr);
     if (entity.isDevLanguage) {
       makeDefinesDartCodeFile(
-          this.outDefineDartFile, this.genClass, jsonObj, i18nEnttitys);
+          this.outDefineDartFile!, this.genClass, jsonObj, i18nEnttitys);
     }
   }
 }
